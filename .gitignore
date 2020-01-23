@@ -86,6 +86,9 @@ celerybeat-schedule
 # virtualenv
 .venv
 venv/
+db/
+mysql-data/
+.idea/
 ENV/
 .vscode
 # Spyder project settings
