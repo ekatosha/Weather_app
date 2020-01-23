@@ -9,7 +9,7 @@
    * Загрузить Docker
    * Загрузить репозитория Weather App
    *  В терминале команды:
-     *  docker-compose build
+      * docker-compose build
       * docker-compose up
    * Зайти в брайзер на http://localhost:8000/
    * Вы прекрасны! Можно смотреть статистику! 
