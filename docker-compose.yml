@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: db_of_my_project
+    expose:
+    - 3306
+    environment:
+       MYSQL_DATABASE: 'weathers'
+       MYSQL_USER: 'root'
+       MYSQL_PASSWORD: '5585655'
+       MYSQL_ROOT_PASSWORD: '5585655'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' 
+    volumes:
+        - ./db:/var/lib/mysql
+    stdin_open: true
+    tty: true
+  web:
+    depends_on:
+    - db
+    build: .
+    environment:
+       DBHOST: 'db'
+    command: sh -c "python manage.py migrate && python manage.py loaddata weather.json -i && python manage.py runserver 0.0.0.0:8000"
+    #command: ["./wait-for-it.sh", "db:3306", "--", "python", "manage.py", "migrate"]
+    volumes:
+      - .:/weather
+    ports:
+      - "8000:8000" 
+    links:
+      - db

@@ -1,0 +1,6 @@
+Django~=2.2.4
+mysqlclient
+django-mysql
+pymysql
+PyMySQL[rsa]
+cryptography

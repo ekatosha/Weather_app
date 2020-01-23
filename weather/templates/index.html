@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+</head>
+<body>
+<div class="container">
+<form action="">
+    <div class="row mb-3">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="colorSelect">Выберите дату</label>
+                <div class="input-group date" id="datetimepickerstart" data-target-input="nearest">
+                    <input type="text" name="start_date" class="form-control datetimepicker-input" value = "{{ start_date|date:"d-m-Y" }}" data-target="#datetimepickerstart"/>
+                    <div class="input-group-append" data-target="#datetimepickerstart" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="colorSelect">Выберите дату</label>
+                <div class="input-group date" id="datetimepickerend" data-target-input="nearest">
+                    <input type="text" name="end_date" class="form-control datetimepicker-input" value = "{{ end_date|date:"d-m-Y" }}" data-target="#datetimepickerend"/>
+                    <div class="input-group-append" data-target="#datetimepickerend" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <label for="colorSelect">Choose city</label>
+    <select id="colorSelect" name="city" class="form-control ">
+        {% for city in cities %}
+        <option {% if  city.city_name == get_city %}selected="selected"{% endif %}>{{ city.city_name }}</option>
+    {% endfor %}
+    </select>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepickerstart').datetimepicker({
+                    format: 'DD-MM-YYYY'
+                });
+                $('#datetimepickerend').datetimepicker({
+                    format: 'DD-MM-YYYY'
+                });
+            });
+        </script>
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-primary">
+            Получить статистику
+        </button>
+        </div>
+    </div>
+</form>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Period</th>
+            <th>Average</th>
+            <th>Max</th>
+            <th>Min</th>
+
+        </tr>
+            <tr>
+                <td>{{ time_period }} дней </td>
+                <td> {{ weather.average_t|floatformat }}</td>
+                <td>{{ weather.max_t|floatformat }}</td>
+                <td>{{ weather.min_t|floatformat }}</td>
+            </tr>
+    </table>
+{% if time > delta %}
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Period</th>
+            <th>Average</th>
+            <th>Max</th>
+            <th>Min</th>
+
+        </tr>
+    {% for weth in  weather_years %}
+            <tr>
+                <td>{{ weth.year }} </td>
+                <td> {{ weth.average_t|floatformat }}</td>
+                <td>{{ weth.max_t|floatformat }}</td>
+                <td>{{ weth.min_t|floatformat }}</td>
+            </tr>
+{% endfor %}
+    </table>
+{% endif %}
+    <table class="table table-striped table-hover">
+    <tr>
+            <th>число дней с осадками </th>
+            <th>2 самых частых вида осадков </th>
+            <th> </th>
+
+        </tr>
+
+            <tr>
+                <td>{{ percent|floatformat }}%</td>
+                {% for freq in  percipitation_freq %}
+                <td>{{ freq.precipitation__precipitation }}</td>
+                {% endfor %}
+            </tr>
+
+    </table>
+<table class="table table-striped table-hover">
+    <tr>
+            <th>Средняя скорость ветра </th>
+            <th>направление ветра </th>
+
+        </tr>
+
+            <tr>
+                <td>{{ wind_speed.average_speed|floatformat }}</td>
+                {% for w in  wind %}
+                <td>{{ w.wind_direction__wind_full_name }}</td>
+                {% endfor %}
+            </tr>
+
+    </table>
+</div>
+{{ date_ag }}
+</body>
+</html>
